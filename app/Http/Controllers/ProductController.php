@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,33 @@ class ProductController extends Controller
         ], 200);
     }
 
+    
+    public function productsCategory($id)
+    {
+        $category = Category::find($id);
+        if (!$category) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الفئة غير موجودة'
+            ], 404);
+        }
+
+        $products = $category->products;
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'لا توجد منتجات متاحة في هذه الفئة'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم استرجاع المنتجات بنجاح',
+            'data' => $products
+        ], 200);
+    }
+
     // إضافة منتج جديد
     public function store(Request $request)
     {
@@ -32,6 +60,7 @@ class ProductController extends Controller
             'name'          => 'required|string|max:255',
             'serial_number' => 'required|string|unique:products',
             'description'   => 'nullable|string',
+            'category_id'   => 'required|exists:categories,id',
             'image'         => 'nullable|string',
             'request_number'=> 'nullable|integer',
             'price'         => 'required|numeric',
@@ -80,6 +109,7 @@ class ProductController extends Controller
             'serial_number' => 'sometimes|required|string|unique:products,serial_number,'.$product->id,
             'description'   => 'sometimes|nullable|string',
             'image'         => 'sometimes|nullable|string',
+            'category_id'   => 'sometimes|required|exists:categories,id',
             'request_number'=> 'sometimes|nullable|integer',
             'price'         => 'sometimes|required|numeric',
             'active'        => 'sometimes|nullable|boolean'

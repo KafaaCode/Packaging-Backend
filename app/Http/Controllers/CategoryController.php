@@ -4,45 +4,85 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Traits\HTTP_ResponseTrait;
 
 class CategoryController extends Controller
 {
-    // استرجاع جميع الفئات
-    public function index()
+    use HTTP_ResponseTrait;
+    public function adminIndex(Request $request)
     {
-        $categories = Category::all();
-
+        $perPage = $request->query('per_page', 10);
+    
+        $categories = Category::paginate($perPage);
+    
         if ($categories->isEmpty()) {
             return response()->json([
                 'status'  => 'error',
                 'message' => 'لا توجد فئات متاحة'
             ], 404);
         }
-        
+    
+        return $this->paginateResponse(
+            $categories,
+            'تم استرجاع الفئات بنجاح',
+            200
+        );
+    }
+    
+
+    
+    // استرجاع جميع الفئات
+    public function index()
+    {
+        // الحصول على المستخدم من التوكين
+        $user = auth()->user();
+
+        // dd($user);
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'المستخدم غير موجود'
+            ], 404);
+        }
+
+        // استرجاع الفئات التي تنتمي للبلد والتخصص الخاص بالمستخدم
+        $categories = Category::where('country_id', $user->country_id)
+            ->where('specialization_id', $user->specialization_id)
+            ->get();
+
+        if ($categories->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'لا توجد فئات متاحة'
+            ], 404);
+        }
+
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم استرجاع الفئات بنجاح',
-            'data'    => $categories
+            'data' => $categories
         ], 200);
     }
+
 
     // إضافة فئة جديدة
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'              => 'required|string|max:255',
-            'image'             => 'nullable|string',
-            'country_id'        => 'required|exists:countries,id',
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|string',
+            'country_id' => 'required|exists:countries,id',
             'specialization_id' => 'required|exists:specializations,id',
-            'active'            => 'nullable|boolean'
+            'active' => 'nullable|boolean'
         ]);
 
         $category = Category::create($validated);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم إنشاء الفئة بنجاح',
-            'data'    => $category
+            'data' => $category
         ], 201);
     }
 
@@ -52,14 +92,14 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (!$category) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'الفئة غير موجودة'
             ], 404);
         }
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم استرجاع الفئة بنجاح',
-            'data'    => $category
+            'data' => $category
         ], 200);
     }
 
@@ -69,25 +109,25 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (!$category) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'الفئة غير موجودة'
             ], 404);
         }
 
         $validated = $request->validate([
-            'name'              => 'sometimes|required|string|max:255',
-            'image'             => 'sometimes|nullable|string',
-            'country_id'        => 'sometimes|required|exists:countries,id',
+            'name' => 'sometimes|required|string|max:255',
+            'image' => 'sometimes|nullable|string',
+            'country_id' => 'sometimes|required|exists:countries,id',
             'specialization_id' => 'sometimes|required|exists:specializations,id',
-            'active'            => 'sometimes|nullable|boolean'
+            'active' => 'sometimes|nullable|boolean'
         ]);
 
         $category->update($validated);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم تحديث الفئة بنجاح',
-            'data'    => $category
+            'data' => $category
         ], 200);
     }
 
@@ -97,13 +137,13 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (!$category) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'الفئة غير موجودة'
             ], 404);
         }
         $category->delete();
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم حذف الفئة بنجاح'
         ], 200);
     }

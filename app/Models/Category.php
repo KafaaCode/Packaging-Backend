@@ -20,6 +20,11 @@ class Category extends Model
         return $this->belongsTo(Country::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     // علاقة الفئة بالتخصص
     public function specialization()
     {

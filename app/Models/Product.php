@@ -8,6 +8,7 @@ class Product extends Model
 {
     protected $fillable = [
         'name',
+        'category_id',
         'serial_number',
         'description',
         'image',
@@ -15,6 +16,12 @@ class Product extends Model
         'price',
         'active'
     ];
+
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     // علاقة المنتج بتفاصيل الطلبات (اختيارية)
     public function orderDetails()

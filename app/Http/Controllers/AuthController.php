@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function specializationAndcountry(){
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'تم استرجاع التخصصات والدول بنجاح',
+            'data'    => [
+                'specializations' => \App\Models\Specialization::select('name', 'id')->get(),
+                'countries'       => \App\Models\Country::select('name', 'id')->get(),
+            ]
+        ], 200);
+    }
+
     // تسجيل حساب جديد
     public function register(Request $request)
     {
@@ -27,8 +38,10 @@ class AuthController extends Controller
             'password'          => bcrypt($validated['password']),
             'specialization_id' => $validated['specialization_id'],
             'country_id'        => $validated['country_id'],
-            'status'            => 1, // الحالة افتراضيًا مفعل
+            'status'            => 0, // الحالة افتراضيًا مفعل
         ]);
+
+        $user->assignRole('User');
 
         // إنشاء توكن باستخدام Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -38,8 +51,8 @@ class AuthController extends Controller
             'message' => 'تم إنشاء الحساب بنجاح',
             'data'    => [
                 'user'         => $user,
+                'role'        => $user->getRoleNames(),
                 'access_token' => $token,
-                'token_type'   => 'Bearer'
             ]
         ], 201);
     }
@@ -64,13 +77,14 @@ class AuthController extends Controller
         // إنشاء توكن جديد
         $token = $user->createToken('auth_token')->plainTextToken;
 
+
         return response()->json([
             'status'  => 'success',
             'message' => 'تم تسجيل الدخول بنجاح',
             'data'    => [
                 'user'         => $user,
+                'role'        => $user->getRoleNames(),
                 'access_token' => $token,
-                'token_type'   => 'Bearer'
             ]
         ], 200);
     }

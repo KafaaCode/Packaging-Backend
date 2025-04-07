@@ -28,23 +28,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::apiResource('orders', OrderController::class);
-Route::apiResource('order-details', OrderDetailController::class);
-Route::apiResource('products', ProductController::class);
-Route::apiResource('categories', CategoryController::class);
-Route::apiResource('countries', CountryController::class);
-Route::apiResource('specializations', SpecializationController::class);
-Route::apiResource('supports', SupportController::class);
-Route::apiResource('settings', SettingController::class);
+
 
 
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::get('specialization-and-country', [AuthController::class, 'specializationAndcountry']);
 
-Route::middleware('auth:sanctum')->group(function(){
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile', [AuthController::class, 'profile']);
     Route::put('profile', [AuthController::class, 'updateProfile']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::apiResource('orders', OrderController::class);
+    Route::apiResource('order-details', OrderDetailController::class);
+    Route::apiResource('products', ProductController::class);
+    Route::get('products/categories/{id}', [ProductController::class, 'productsCategory']);
+    Route::apiResource('categories', CategoryController::class);
+    Route::get('admin/categories', [CategoryController::class, 'adminIndex']);
+    Route::apiResource('countries', CountryController::class);
+    Route::apiResource('specializations', SpecializationController::class);
+    Route::apiResource('supports', SupportController::class);
+    Route::apiResource('settings', SettingController::class);
 });
