@@ -11,79 +11,7 @@ they have no meaning until this middleware is applied either in the routes (web.
 The roles and permissions created in the initial setup via the seeder and listed below - but remember they are useless until they are applied!!!!
 
 
-The permissions at the moment are : 
 
-```php
-        Permission::create(['name' => 'create-users']);
-        Permission::create(['name' => 'edit-users']);
-        Permission::create(['name' => 'delete-users']);
-
-        Permission::create(['name' => 'create-articles']);
-        Permission::create(['name' => 'edit-articles']);
-        Permission::create(['name' => 'delete-articles']);
-
-        Permission::create(['name' => 'create-product']);
-        Permission::create(['name' => 'list-product']);
-        Permission::create(['name' => 'edit-product']);
-        Permission::create(['name' => 'delete-product']);
-       
-        $adminRole = Role::create(['name' => 'Admin']);
-        $editorRole = Role::create(['name' => 'Editor']);
-        $productmanagerRole = Role::create(['name' => 'ProductManager']);
-
-        $adminRole->givePermissionTo([
-            'create-users',
-            'edit-users',
-            'delete-users',
-            'create-articles',
-            'edit-articles',
-            'delete-articles',
-            'create-product',
-            'list-product',
-            'edit-product',
-            'delete-product',
-
-        ]);
-
-        $editorRole->givePermissionTo([
-            'create-articles',
-            'edit-articles',
-            'delete-articles',
-        ]);
-
-        $productmanagerRole->givePermissionTo([
-            'create-product',
-            'list-product',
-            'edit-product',
-            'delete-product',
-        ]);
-          // create demo users
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Ed Editor',
-            'email' => 'editor@example.com',
-            'password' => Hash::make('password')
-        ]);
-        $user->assignRole($editorRole);
-
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Andrew Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password')
-        ]);
-
-        $user->assignRole($adminRole);
-
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Peter Product',
-            'email' => 'product@example.com',
-            'password' => Hash::make('password')
-        ]);
-        
-        $user->assignRole($productmanagerRole);
-    }
-
-
-```
 ### Whilst this is exciting the only restrictions at the moment are on the crud for users
 as can be seen in the UserController methods eg
 
