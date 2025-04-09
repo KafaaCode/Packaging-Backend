@@ -4,14 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PermissionController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CarController;
-use App\Http\Controllers\DriverController;
-use App\Http\Controllers\SectionController;
-use App\Http\Controllers\TankController;
-use App\Http\Controllers\RefuelingController;
-use App\Http\Controllers\CarBrandController;
 
 
 /*
