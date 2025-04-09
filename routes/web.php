@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', function () {
     return view('users.index');
 })->middleware('auth')->name('users.index');
-Route::get('/users/edit/{id}', 'UserController@edit')->name('users.edit');
+Route::get('/users/edit/{id}',[UserController::class, 'edit'])->name('users.edit');
 
 
 Route::resource('roles', RoleController::class);
