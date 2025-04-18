@@ -32,8 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+
 Route::get('specialization-and-country', [AuthController::class, 'specializationAndcountry']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -52,3 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('supports', SupportController::class);
     Route::apiResource('settings', SettingController::class);
 });
+
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
