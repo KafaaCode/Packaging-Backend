@@ -19,8 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('specialization_id');
             $table->boolean('active')->default(true);
             $table->timestamps();
-
-
         });
     }
 

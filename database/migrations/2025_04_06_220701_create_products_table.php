@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('serial_number')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->unsignedBigInteger('category_id');
             $table->integer('request_number')->default(0);
             $table->decimal('price', 10, 2);
+            $table->unsignedBigInteger('category_id');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

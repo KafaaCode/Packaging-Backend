@@ -61,7 +61,7 @@ class ProductController extends Controller
             'name'           => 'required|string|max:255',
             'serial_number'  => 'required|string|unique:products',
             'description'    => 'nullable|string',
-            'category_id'    => 'required|exists:categories,id',
+            'category_id'    => 'required',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'request_number' => 'nullable|integer',
             'price'          => 'required|numeric',
@@ -115,9 +115,9 @@ class ProductController extends Controller
             'serial_number'  => 'sometimes|required|string|unique:products,serial_number,' . $product->id,
             'description'    => 'sometimes|nullable|string',
             'image'          => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id'    => 'sometimes|required|exists:categories,id',
+            'category_id'    => 'sometimes|required',
             'request_number' => 'sometimes|nullable|integer',
-            'price'          => 'sometimes|required|numeric',
+            'price'          => 'sometimes|numeric',
             'active'         => 'sometimes|nullable|boolean'
         ]);
     
