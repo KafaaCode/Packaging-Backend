@@ -26,6 +26,30 @@ class OrderController extends Controller
         ], 200);
     }
 
+    // عرض الطلبات الخاصة بالمستخدم المصادق عليه
+    public function myOrders(Request $request)
+    {
+        $user = $request->user();
+
+        $orders = Order::with('orderDetails') // في حال أردت جلب التفاصيل أيضًا
+            ->where('user_id', $user->id)
+            ->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'لا توجد طلبات لهذا المستخدم'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم استرجاع الطلبات الخاصة بالمستخدم بنجاح',
+            'data' => $orders
+        ], 200);
+    }
+
+
     public function store(Request $request)
     {
         // تعريف قواعد التحقق من البيانات

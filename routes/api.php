@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('orders', OrderController::class);
+    Route::get('my-orders', [OrderController::class, 'myOrders']);
     Route::apiResource('order-details', OrderDetailController::class);
     Route::apiResource('products', ProductController::class);
     Route::get('products/categories/{id}', [ProductController::class, 'productsCategory']);
