@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Traits\HTTP_ResponseTrait;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -70,21 +71,26 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'nullable|string',
-            'country_id' => 'required|exists:countries,id',
+            'name'              => 'required|string|max:255',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'country_id'        => 'required|exists:countries,id',
             'specialization_id' => 'required|exists:specializations,id',
-            'active' => 'nullable|boolean'
+            'active'            => 'nullable|boolean'
         ]);
-
+    
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('categories', 'public');
+        }
+    
         $category = Category::create($validated);
-
+    
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'تم إنشاء الفئة بنجاح',
-            'data' => $category
+            'data'    => $category
         ], 201);
     }
+    
 
     // استرجاع فئة محددة
     public function show($id)
@@ -113,23 +119,31 @@ class CategoryController extends Controller
                 'message' => 'الفئة غير موجودة'
             ], 404);
         }
-
+    
         $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'image' => 'sometimes|nullable|string',
-            'country_id' => 'sometimes|required|exists:countries,id',
-            'specialization_id' => 'sometimes|required|exists:specializations,id',
-            'active' => 'sometimes|nullable|boolean'
+            'name'              => 'sometimes|string|max:255',
+            'country_id'        => 'sometimes|exists:countries,id',
+            'specialization_id' => 'sometimes|exists:specializations,id',
+            'active'            => 'sometimes|nullable|boolean'
         ]);
-
+    
+        if ($request->hasFile('image')) {
+            if ($category->image && Storage::disk('public')->exists($category->image)) {
+                Storage::disk('public')->delete($category->image);
+            }
+    
+            $validated['image'] = $request->file('image')->store('categories', 'public');
+        }
+    
         $category->update($validated);
-
+    
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'تم تحديث الفئة بنجاح',
-            'data' => $category
+            'data'    => $category
         ], 200);
     }
+    
 
     // حذف فئة
     public function destroy($id)
