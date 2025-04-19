@@ -34,7 +34,6 @@ class OrderController extends Controller
             'user_id' => 'required|exists:users,id',
             'total_amount' => 'required|numeric',
             'delivery_time' => 'nullable|date',
-            'status' => 'sometimes|nullable',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
             // تفاصيل الطلب كمصفوفة
@@ -47,6 +46,7 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         try {
+            $validated['status'] = 'pending';
             // إنشاء طلب جديد؛ رقم التسلسلي والحالة (pending) يتم توليدهما تلقائيًا في الموديل
             $order = Order::create([
                 'user_id' => $validated['user_id'],
