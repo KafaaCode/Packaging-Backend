@@ -57,6 +57,7 @@ class OrderController extends Controller
             'delivery_time' => 'nullable|date',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
+            'status' => 'string|in:pending,delivery,partial delivery,completed,canceled',
 
             'order_details' => 'required|array|min:1',
             'order_details.*.product_id' => 'required|exists:products,id',
