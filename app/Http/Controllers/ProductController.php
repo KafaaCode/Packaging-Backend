@@ -38,7 +38,8 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $products = $category->products->with('category')->get();
+        // جلب المنتجات مع تفاصيل الفئة
+        $products = $category->products()->with('category')->get();
 
         if ($products->isEmpty()) {
             return response()->json([
@@ -53,6 +54,7 @@ class ProductController extends Controller
             'data' => $products
         ], 200);
     }
+
 
     // إضافة منتج جديد
     public function store(Request $request)
