@@ -26,12 +26,11 @@ class OrderController extends Controller
         ], 200);
     }
 
-    // عرض الطلبات الخاصة بالمستخدم المصادق عليه
     public function myOrders(Request $request)
     {
         $user = $request->user();
 
-        $orders = Order::with('orderDetails') // في حال أردت جلب التفاصيل أيضًا
+        $orders = Order::with('orderDetails')
             ->where('user_id', $user->id)
             ->get();
 
@@ -52,15 +51,13 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // تعريف قواعد التحقق من البيانات
         $rules = [
-            // بيانات الطلب
             'user_id' => 'required|exists:users,id',
             'total_amount' => 'required|numeric',
             'delivery_time' => 'nullable|date',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
-            // تفاصيل الطلب كمصفوفة
+
             'order_details' => 'required|array|min:1',
             'order_details.*.product_id' => 'required|exists:products,id',
             'order_details.*.quantity' => 'required|integer|min:1',
@@ -71,7 +68,6 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             $validated['status'] = 'pending';
-            // إنشاء طلب جديد؛ رقم التسلسلي والحالة (pending) يتم توليدهما تلقائيًا في الموديل
             $order = Order::create([
                 'user_id' => $validated['user_id'],
                 'total_amount' => $validated['total_amount'],
@@ -82,7 +78,6 @@ class OrderController extends Controller
             ]);
 
 
-            // إضافة تفاصيل الطلب
             foreach ($validated['order_details'] as $detail) {
                 $order->orderDetails()->create([
                     'product_id' => $detail['product_id'],
@@ -110,7 +105,6 @@ class OrderController extends Controller
     }
 
 
-    // استرجاع طلب محدد
     public function show($id)
     {
         $order = Order::find($id);
@@ -127,7 +121,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-    // تعديل بيانات طلب
     public function update(Request $request, $id)
     {
         $order = Order::find($id);
@@ -142,7 +135,7 @@ class OrderController extends Controller
             'user_id' => 'required|exists:users,id',
             'total_amount' => 'required|numeric',
             'delivery_time' => 'nullable|date',
-            'status' => 'sometimes|nullable',
+            'status' => 'sometimes|nullable|string|in:pending,delivery,partial delivery,completed,canceled',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
 
