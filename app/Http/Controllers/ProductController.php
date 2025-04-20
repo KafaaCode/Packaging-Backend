@@ -16,18 +16,18 @@ class ProductController extends Controller
 
         if ($products->isEmpty()) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'لا توجد منتجات'
             ], 404);
         }
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم استرجاع المنتجات بنجاح',
-            'data'    => $products
+            'data' => $products
         ], 200);
     }
 
-    
+
     public function productsCategory($id)
     {
         $category = Category::find($id);
@@ -38,7 +38,7 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $products = $category->products;
+        $products = $category->products->with('category')->get();
 
         if ($products->isEmpty()) {
             return response()->json([
@@ -58,29 +58,29 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'           => 'required|string|max:255',
-            'serial_number'  => 'required|string|unique:products',
-            'description'    => 'nullable|string',
-            'category_id'    => 'required',
-            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name' => 'required|string|max:255',
+            'serial_number' => 'required|string|unique:products',
+            'description' => 'nullable|string',
+            'category_id' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'request_number' => 'nullable|integer',
-            'price'          => 'required|numeric',
-            'active'         => 'nullable|boolean'
+            'price' => 'required|numeric',
+            'active' => 'nullable|boolean'
         ]);
-    
+
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
-    
+
         $product = Product::create($validated);
-    
+
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم إنشاء المنتج بنجاح',
-            'data'    => $product
+            'data' => $product
         ], 201);
     }
-    
+
 
     // استرجاع منتج محدد
     public function show($id)
@@ -88,14 +88,14 @@ class ProductController extends Controller
         $product = Product::find($id);
         if (!$product) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'المنتج غير موجود'
             ], 404);
         }
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم استرجاع المنتج بنجاح',
-            'data'    => $product
+            'data' => $product
         ], 200);
     }
 
@@ -105,40 +105,40 @@ class ProductController extends Controller
         $product = Product::find($id);
         if (!$product) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'المنتج غير موجود'
             ], 404);
         }
-    
+
         $validated = $request->validate([
-            'name'           => 'sometimes|required|string|max:255',
-            'serial_number'  => 'sometimes|required|string|unique:products,serial_number,' . $product->id,
-            'description'    => 'sometimes|nullable|string',
-            'image'          => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id'    => 'sometimes|required',
+            'name' => 'sometimes|required|string|max:255',
+            'serial_number' => 'sometimes|required|string|unique:products,serial_number,' . $product->id,
+            'description' => 'sometimes|nullable|string',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'sometimes|required',
             'request_number' => 'sometimes|nullable|integer',
-            'price'          => 'sometimes|numeric',
-            'active'         => 'sometimes|nullable|boolean'
+            'price' => 'sometimes|numeric',
+            'active' => 'sometimes|nullable|boolean'
         ]);
-    
+
         if ($request->hasFile('image')) {
             // حذف الصورة القديمة إن وُجدت
             if ($product->image && Storage::disk('public')->exists($product->image)) {
                 Storage::disk('public')->delete($product->image);
             }
-    
+
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
-    
+
         $product->update($validated);
-    
+
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم تحديث المنتج بنجاح',
-            'data'    => $product
+            'data' => $product
         ], 200);
     }
-    
+
 
     // حذف منتج
     public function destroy($id)
@@ -146,13 +146,13 @@ class ProductController extends Controller
         $product = Product::find($id);
         if (!$product) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'المنتج غير موجود'
             ], 404);
         }
         $product->delete();
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'تم حذف المنتج بنجاح'
         ], 200);
     }
