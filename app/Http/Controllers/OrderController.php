@@ -30,9 +30,9 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
-        $orders = Order::with('orderDetails')
+        $orders = Order::with('orderDetails.product')
             ->where('user_id', $user->id)
-            ->get();
+            ->orderByDesc('created_at')->get();
 
         if ($orders->isEmpty()) {
             return response()->json([
@@ -41,12 +41,45 @@ class OrderController extends Controller
             ], 404);
         }
 
+        $formattedOrders = $orders->map(function ($order) {
+            return [
+                'id' => $order->id,
+                'serial_number' => $order->serial_number,
+                'user_id' => $order->user_id,
+                'total_amount' => $order->total_amount,
+                'status' => $order->status,
+                'delivery_time' => $order->delivery_time,
+                'reply_message' => $order->reply_message,
+                'total_price' => $order->total_price,
+                'created_at' => $order->created_at,
+                'updated_at' => $order->updated_at,
+                'products' => $order->orderDetails->map(function ($detail) {
+                    $product = $detail->product;
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'serial_number' => $product->serial_number,
+                        'description' => $product->description,
+                        'image' => $product->image,
+                        'request_number' => $product->request_number,
+                        'price' => $product->price,
+                        'category_id' => $product->category_id,
+                        'active' => $product->active,
+                        'created_at' => $product->created_at,
+                        'updated_at' => $product->updated_at,
+                        'quantity' => $detail->quantity, // العدد مضاف هنا
+                    ];
+                }),
+            ];
+        });
+
         return response()->json([
             'status' => 'success',
             'message' => 'تم استرجاع الطلبات الخاصة بالمستخدم بنجاح',
-            'data' => $orders
+            'data' => $formattedOrders
         ], 200);
     }
+
 
 
     public function store(Request $request)
