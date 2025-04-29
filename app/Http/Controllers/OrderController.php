@@ -119,7 +119,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'user_id' => 'required|exists:users,id',
             'delivery_time' => 'nullable|date',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
@@ -131,12 +130,12 @@ class OrderController extends Controller
         ];
 
         $validated = $request->validate($rules);
-
+        $user = $request->user();
         DB::beginTransaction();
         try {
             $validated['status'] = 'pending';
             $order = Order::create([
-                'user_id' => $validated['user_id'],
+                'user_id' => $user->id,
                 'total_amount' => $validated['total_price'],
                 'status' => $validated['status'],
                 'delivery_time' => $validated['delivery_time'] ?? null,
