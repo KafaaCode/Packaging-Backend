@@ -120,7 +120,6 @@ class OrderController extends Controller
     {
         $rules = [
             'user_id' => 'required|exists:users,id',
-            'total_amount' => 'required|numeric',
             'delivery_time' => 'nullable|date',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
@@ -138,7 +137,7 @@ class OrderController extends Controller
             $validated['status'] = 'pending';
             $order = Order::create([
                 'user_id' => $validated['user_id'],
-                'total_amount' => $validated['total_amount'],
+                'total_amount' => $validated['total_price'],
                 'status' => $validated['status'],
                 'delivery_time' => $validated['delivery_time'] ?? null,
                 'reply_message' => $validated['reply_message'] ?? null,
