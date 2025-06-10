@@ -8,30 +8,38 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    // استرجاع جميع الطلبات
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::all();
+        $page = $request->get('page', 1);
+        $limit = $request->get('limit', 10);
 
-        if ($orders->isEmpty()) {
+        // جلب الطلبات مع علاقات المستخدم والتفاصيل
+        $query = Order::with(['orderDetails.product'])->orderBy('created_at', 'desc');
+
+        $ordersPaginated = $query->paginate($limit, ['*'], 'page', $page);
+
+        if ($ordersPaginated->isEmpty()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'لا توجد طلبات'
             ], 404);
         }
 
-        $formattedOrders = $orders->map(function ($order) {
+        $formattedOrders = $ordersPaginated->getCollection()->map(function ($order) {
             return [
                 'id' => $order->id,
                 'serial_number' => $order->serial_number,
                 'user_id' => $order->user_id,
+                'user_name' => $order->user->name ?? null,
+                'user_email' => $order->user->email ?? null,
+                'user_phone' => $order->user->phone ?? null,
                 'total_amount' => $order->total_amount,
                 'status' => $order->status,
                 'delivery_time' => $order->delivery_time,
                 'reply_message' => $order->reply_message,
                 'total_price' => $order->total_price,
-                'created_at' => $order->created_at,
-                'updated_at' => $order->updated_at,
+                'created_at' => $order->created_at->toDateTimeString(),
+                'updated_at' => $order->updated_at->toDateTimeString(),
                 'products' => $order->orderDetails->map(function ($detail) {
                     $product = $detail->product;
                     return [
@@ -44,21 +52,80 @@ class OrderController extends Controller
                         'price' => $product->price,
                         'category_id' => $product->category_id,
                         'active' => $product->active,
-                        'created_at' => $product->created_at,
-                        'updated_at' => $product->updated_at,
-                        'quantity' => $detail->quantity, // العدد مضاف هنا
+                        'created_at' => $product->created_at->toDateTimeString(),
+                        'updated_at' => $product->updated_at->toDateTimeString(),
+                        'quantity' => $detail->quantity,
                     ];
                 }),
             ];
         });
 
-
         return response()->json([
             'status' => 'success',
             'message' => 'تم استرجاع الطلبات بنجاح',
-            'data' => $formattedOrders
+            'data' => $formattedOrders,
+            'pagination' => [
+                'current_page' => $ordersPaginated->currentPage(),
+                'last_page' => $ordersPaginated->lastPage(),
+                'per_page' => $ordersPaginated->perPage(),
+                'total' => $ordersPaginated->total(),
+            ]
         ], 200);
     }
+
+
+
+    public function show($id)
+    {
+        $order = Order::with(['user', 'orderDetails.product'])->find($id);
+
+        if (!$order) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الطلب غير موجود'
+            ], 404);
+        }
+
+        $formattedOrder = [
+            'id' => $order->id,
+            'serial_number' => $order->serial_number,
+            'user_id' => $order->user_id,
+            'user_name' => $order->user->name ?? null,
+            'user_email' => $order->user->email ?? null,
+            'user_phone' => $order->user->phone ?? null,
+            'total_amount' => $order->total_amount,
+            'status' => $order->status,
+            'delivery_time' => $order->delivery_time,
+            'reply_message' => $order->reply_message,
+            'total_price' => $order->total_price,
+            'created_at' => $order->created_at->toDateTimeString(),
+            'updated_at' => $order->updated_at->toDateTimeString(),
+            'products' => $order->orderDetails->map(function ($detail) {
+                $product = $detail->product;
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'serial_number' => $product->serial_number,
+                    'description' => $product->description,
+                    'image' => $product->image,
+                    'request_number' => $product->request_number,
+                    'price' => $product->price,
+                    'category_id' => $product->category_id,
+                    'active' => $product->active,
+                    'created_at' => $product->created_at->toDateTimeString(),
+                    'updated_at' => $product->updated_at->toDateTimeString(),
+                    'quantity' => $detail->quantity,
+                ];
+            }),
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم استرجاع الطلب بنجاح',
+            'data' => $formattedOrder
+        ], 200);
+    }
+
 
     public function myOrders(Request $request)
     {
@@ -133,7 +200,7 @@ class OrderController extends Controller
         $user = $request->user();
         DB::beginTransaction();
         try {
-            $validated['status'] = 'pending';
+            $validated['status'] = 'Pending';
             $order = Order::create([
                 'user_id' => $user->id,
                 'total_amount' => $validated['total_price'],
@@ -171,21 +238,7 @@ class OrderController extends Controller
     }
 
 
-    public function show($id)
-    {
-        $order = Order::find($id);
-        if (!$order) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'الطلب غير موجود'
-            ], 404);
-        }
-        return response()->json([
-            'status' => 'success',
-            'message' => 'تم استرجاع الطلب بنجاح',
-            'data' => $order
-        ], 200);
-    }
+
 
     public function update(Request $request, $id)
     {
@@ -198,30 +251,22 @@ class OrderController extends Controller
         }
 
         $rules = [
-            'user_id' => 'required|exists:users,id',
-            'total_amount' => 'required|numeric',
-            'delivery_time' => 'nullable|date',
-            'status' => 'sometimes|nullable|string|in:pending,delivery,partial delivery,completed,canceled',
+            'status' => 'sometimes|nullable|string|in:Pending,Partial Delivery,Completed,Canceled',
             'reply_message' => 'nullable|string',
-            'total_price' => 'required|numeric',
-
-            'order_details' => 'required|array|min:1',
-            'order_details.*.product_id' => 'required|exists:products,id',
-            'order_details.*.quantity' => 'required|integer|min:1',
         ];
 
         $validated = $request->validate($rules);
 
         $order->update([
-            'user_id' => $validated['user_id'],
-            'total_amount' => $validated['total_amount'],
+            // 'user_id' => $validated['user_id'],
+            // 'total_amount' => $validated['total_amount'],
             'status' => $validated['status'],
-            'delivery_time' => $validated['delivery_time'] ?? null,
+            // 'delivery_time' => $validated['delivery_time'] ?? null,
             'reply_message' => $validated['reply_message'] ?? null,
-            'total_price' => $validated['total_price']
+            // 'total_price' => $validated['total_price']
         ]);
 
-        $order->orderDetails()->delete();
+        // $order->orderDetails()->delete();
 
         return response()->json([
             'status' => 'success',

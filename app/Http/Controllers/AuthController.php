@@ -152,13 +152,17 @@ class AuthController extends Controller
     }
 
     // تسجيل الخروج: إلغاء التوكن الحالي
-    public function logout(Request $request)
-    {
+public function logout(Request $request)
+{
+    // تحقق إذا كان المستخدم يحتوي على توكن حالي
+    if ($request->user() && $request->user()->currentAccessToken()) {
         $request->user()->currentAccessToken()->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'تم تسجيل الخروج بنجاح'
-        ], 200);
     }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'تم تسجيل الخروج بنجاح'
+    ], 200);
+}
+
 }

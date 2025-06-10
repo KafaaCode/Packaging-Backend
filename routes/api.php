@@ -9,6 +9,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,19 +28,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
-
-
-
-
 Route::get('specialization-and-country', [AuthController::class, 'specializationAndcountry']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/api-users', [UserController::class, 'all_users']);
     Route::get('profile', [AuthController::class, 'profile']);
     Route::put('profile', [AuthController::class, 'updateProfile']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
-    Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('orders', OrderController::class);
     Route::get('my-orders', [OrderController::class, 'myOrders']);
     Route::apiResource('order-details', OrderDetailController::class);
@@ -52,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('supports', SupportController::class);
     Route::apiResource('settings', SettingController::class);
 });
+Route::post('logout', [AuthController::class, 'logout']);
 
 
 Route::post('/register', [AuthController::class, 'register']);

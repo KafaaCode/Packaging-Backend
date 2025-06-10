@@ -19,14 +19,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
-    return redirect('/dashboard');
+    return view('layouts.app');
+    // return redirect('/dashboard');
 });
 
-Route::get('/dashboard', function () {
-    // return view('dashboard');
-    return redirect('/refuelings');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     // return view('dashboard');
+//     return redirect('/');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -130,9 +130,9 @@
                 <li class="nav-item me-auto"><a class="navbar-brand"
                         href="../../../html/rtl/vertical-menu-template/index.html">
                         <span class="brand-logo">
-                            <img src="{{ asset('logo.jpg') }}" alt="" />
+                            <img src="#" alt="" />
                         </span>
-                        <h2 class="brand-text">كازية نصيب</h2>
+                        <h2 class="brand-text"></h2>
                     </a></li>
                 <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i
                             class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i
@@ -143,28 +143,6 @@
         <div class="shadow-bottom"></div>
         <div class="main-menu-content">
             <ul class="navigation navigation-main">
-                @can('عرض تعبئة وقود')
-                    <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('refuelings.index') }}"><i
-                                class="fa-solid fa-gas-pump"></i><span class="">تعبئة الوقود</span></a>
-                    </li>
-                @endcan
-                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('drivers.index') }}"><i
-                            class="fa-solid fa-id-card"></i><span class="">السائقين</span></a>
-                </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('sections.index') }}"><i
-                            class="fa-solid fa-bars-progress"></i><span
-                            class="menu-title text-truncate">الأقسام</span></a>
-                </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('car_brands.index') }}"><i
-                            class="fa-solid fa-car"></i><span class="menu-title text-truncate">ماركات
-                            السيارات</span></a>
-                </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('cars.index') }}"><i
-                            class="fa-solid fa-car-side"></i><span class="menu-title text-truncate">السيارات</span></a>
-                </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('tanks.index') }}"><i
-                            class="fa-solid fa-mound"></i><span class="menu-title text-truncate">الخزانات</span></a>
-                </li>
                 <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('users.index') }}"><i
                             class="fa-solid fa-user-group"></i><span
                             class="menu-title text-truncate">المستخدمين</span></a>
@@ -195,11 +173,12 @@
 
     <!-- BEGIN: Footer-->
     <footer class="footer footer-static footer-light" style="background-color: white;">
-        <p class=" mb-0"><span class="float-md-start d-none d-md-block">Copyright © 2025 الهيئة العامة للمنافذ البرية
+        <!-- <p class=" mb-0"><span class="float-md-start d-none d-md-block">Copyright © 2025 الهيئة العامة للمنافذ البرية
                 والبحرية . جميع الحقوق محفوظة.<a class="ms-25" href="{{asset('logo.jpg')}}" target="_blank"> </a> <img
                     class="round" src="{{asset('logo.jpg')}}" alt="avatar" height="20" width="20"></span></span><span
                 class="float-md-end d-none d-md-block">الهيئة العامة للمنافذ البرية والبحرية - المكتب البرمجي <img
-                    class="round" src="{{asset('logo.jpg')}}" alt="avatar" height="20" width="20"></span></p>
+                    class="round" src="{{asset('logo.jpg')}}" alt="avatar" height="20" width="20"></span></p> -->
+                    <p>KafaaCode</p>
     </footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
     <!-- END: Footer-->
