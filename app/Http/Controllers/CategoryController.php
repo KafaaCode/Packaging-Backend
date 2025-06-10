@@ -79,7 +79,7 @@ class CategoryController extends Controller
         ]);
     
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('categories', 'public');
+            $validated['image'] = $request->file('image')->store('categories', 'storage');
         }
     
         $category = Category::create($validated);
