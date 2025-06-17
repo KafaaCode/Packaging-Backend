@@ -107,7 +107,7 @@ class OrderController extends Controller
                     'name' => $product->name,
                     'serial_number' => $product->serial_number,
                     'description' => $product->description,
-                    'image' => $product->image,
+                    'image' => $product->image ? asset('storage/' . $product->image) : null,
                     'request_number' => $product->request_number,
                     'price' => $product->price,
                     'category_id' => $product->category_id,
@@ -189,7 +189,7 @@ class OrderController extends Controller
             'delivery_time' => 'nullable|date',
             'reply_message' => 'nullable|string',
             'total_price' => 'required|numeric',
-            'status' => 'string|in:pending,delivery,partial delivery,completed,canceled',
+            'status' => 'string|in:Pending,delivery,partial delivery,completed,canceled',
 
             'order_details' => 'required|array|min:1',
             'order_details.*.product_id' => 'required|exists:products,id',
