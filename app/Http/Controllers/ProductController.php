@@ -64,7 +64,7 @@ class ProductController extends Controller
             'serial_number' => 'required|string|unique:products',
             'description' => 'nullable|string',
             'category_id' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image',
             'request_number' => 'nullable|integer',
             'price' => 'required|numeric',
             'active' => 'nullable|boolean'

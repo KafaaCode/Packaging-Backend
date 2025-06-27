@@ -72,7 +72,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name'              => 'required|string|max:255',
-            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image'             => 'nullable|image',
             'country_id'        => 'required|exists:countries,id',
             'specialization_id' => 'required|exists:specializations,id',
             'active'            => 'nullable|boolean'
