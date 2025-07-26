@@ -9,6 +9,34 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+
+    public function webShow(Product $product)
+    {
+        return view('front.products.show', compact('product'));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // api
     // استرجاع جميع المنتجات
     public function index()
     {

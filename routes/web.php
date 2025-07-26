@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
@@ -19,19 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $categories = Category::all();
-    return view('welcome',[
-        'categories' => $categories
-    ]);
-    // return view('dashboard');
-    // return redirect('/dashboard');
-});
-
-// Route::get('/dashboard', function () {
-//     // return view('dashboard');
-//     return redirect('/');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -44,7 +33,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', function () {
     return view('users.index');
 })->middleware('auth')->name('users.index');
-Route::get('/users/edit/{id}',[UserController::class, 'edit'])->name('users.edit');
+Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
 
 
 Route::resource('roles', RoleController::class);
@@ -52,9 +41,13 @@ Route::resource('users', UserController::class);
 Route::get('user-create', [UserController::class, 'create_user']);
 Route::resource('products', ProductController::class);
 
+Route::get('/', [Controller::class, 'index'])->name('home');
+Route::get('/categories', [CategoryController::class, 'webIndex'])->name('categories.web.index');
 
-Route::middleware(['auth']) 
+Route::middleware(['auth'])
     ->group(function () {
+        Route::get('/web-categories/{id}', [CategoryController::class, 'webshow'])->name('categories.web.show');
+        Route::get('products/{product}', [ProductController::class, 'webShow'])->name('products.web.show');
 
     });
 
