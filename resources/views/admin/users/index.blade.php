@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     <h1 class="mb-1">🛢️ قائمة المستخدمين</h1>
@@ -40,10 +40,10 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('users.edit', ['user' => $user->id]) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('admin.users.edit', ['user' => $user->id]) }}" class="btn btn-info btn-sm">
                             تعديل
                         </a>
-                        <form method="POST" action="{{ route('users.destroy', $user->id) }}"
+                        <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}"
                             onsubmit="return confirm('Are you sure you want to delete this user?');">
                             @csrf
                             @method('DELETE')

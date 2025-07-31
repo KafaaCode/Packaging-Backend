@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     @if(session('success'))
@@ -20,8 +20,8 @@
                 <td>{{ $permission->name }}</td>
                 <td>
                     <div>
-                        <a href="{{ route('permissions.edit', ['permission' => $permission->id]) }}" class="btn btn-primary">Edit</a>
-                        <form method="POST" action="{{ route('permissions.destroy', $permission->id) }}" onsubmit="return confirm('Are you sure?');">
+                        <a href="{{ route('admin.permissions.edit', ['permission' => $permission->id]) }}" class="btn btn-primary">Edit</a>
+                        <form method="POST" action="{{ route('admin.permissions.destroy', $permission->id) }}" onsubmit="return confirm('Are you sure?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>

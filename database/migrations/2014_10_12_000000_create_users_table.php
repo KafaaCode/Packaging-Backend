@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('specialization_id')->nullable();
             $table->unsignedBigInteger('country_id')->nullable();
             $table->tinyInteger('status')->default(1);
-
+            
         });
     }
 

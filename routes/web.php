@@ -27,28 +27,27 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');    
 
 Route::get('/users', function () {
     return view('users.index');
 })->middleware('auth')->name('users.index');
+
 Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
 
 
-Route::resource('roles', RoleController::class);
-Route::resource('users', UserController::class);
 Route::get('user-create', [UserController::class, 'create_user']);
 Route::resource('products', ProductController::class);
 
 Route::get('/', [Controller::class, 'index'])->name('home');
 Route::get('/categories', [CategoryController::class, 'webIndex'])->name('categories.web.index');
 
-Route::middleware(['auth'])
-    ->group(function () {
-        Route::get('/web-categories/{id}', [CategoryController::class, 'webshow'])->name('categories.web.show');
-        Route::get('products/{product}', [ProductController::class, 'webShow'])->name('products.web.show');
-
-    });
+Route::middleware(['auth'])->group(function () {
+    Route::get('/web-categories/{id}', [CategoryController::class, 'webshow'])->name('categories.web.show');
+    Route::get('products/{product}', [ProductController::class, 'webShow'])->name('products.web.show');
+});
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

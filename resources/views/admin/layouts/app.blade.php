@@ -143,21 +143,29 @@
         <div class="shadow-bottom"></div>
         <div class="main-menu-content">
             <ul class="navigation navigation-main">
-                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('users.index') }}"><i
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.index') }}"><i
+                            class="fa-solid fa-house"></i><span class="menu-title text-truncate">الرئيسية</span></a>
+                </li>
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.users.index') }}"><i
                             class="fa-solid fa-user-group"></i><span
                             class="menu-title text-truncate">المستخدمين</span></a>
                 </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="/roles"><i
+                <!-- categories and products -->
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.categories.index') }}"><i
+                            class="fa-solid fa-list"></i><span class="menu-title text-truncate">الفئات</span></a>
+                </li>
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.products.index') }}"><i
+                            class="fa-solid fa-box"></i><span class="menu-title text-truncate">المنتجات</span></a>
+                </li>
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.roles.index') }}"><i
                             class="fa-solid fa-circle-minus"></i><span
                             class="menu-title text-truncate">الصلاحيات</span></a>
                 </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="/permissions"><i
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.permissions.index') }}"><i
                             class="fa-solid fa-circle-minus"></i><span
                             class="menu-title text-truncate">الأذونات</span></a>
                 </li>
-                <li class="nav-item"><a class="d-flex align-items-center" href="/profile/edit"><i
-                            class="fa-solid fa-user"></i><span class="menu-title text-truncate">تعديل الملف الشخصي</span></a>
-                </li>
+               
                 <li class="nav-item"><a class="d-flex align-items-center" href="/logout"><i
                             class="fa-solid fa-right-from-bracket"></i><span class="menu-title text-truncate">تسجيل الخروج</span></a>
                 </li>

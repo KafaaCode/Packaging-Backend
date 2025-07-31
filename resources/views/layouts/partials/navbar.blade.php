@@ -79,6 +79,25 @@
             <li class="nav-item">
               <a class="btn btn-primary btn-transition" href="#category">تسوق الآن</a>
             </li>
+            <!-- login or dashboard -->
+            @if (Auth::check())
+              @if (Auth::user()->is_admin)
+                <li class="nav-item">
+                  <a class="btn btn-primary btn-transition" href="{{ route('admin.index') }}">لوحة التحكم</a>
+                </li>
+                @else
+                <li class="nav-item">
+                  <a class="btn btn-primary btn-transition" href="{{ route('dashboard') }}">طلباتي</a>
+                </li>
+              @endif
+            @else
+            <li class="nav-item">
+              <a class="btn btn-primary btn-transition" href="{{ route('login') }}">تسجيل الدخول</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary btn-transition" href="{{ route('register') }}">إنشاء حساب</a>
+            </li>
+            @endif
           </ul>
 
         </div>

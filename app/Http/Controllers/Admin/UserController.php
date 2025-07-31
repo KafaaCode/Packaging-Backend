@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $users = User::all(); // or use pagination if there are many users
-        return view('users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function all_users(Request $request)
@@ -42,13 +44,13 @@ class UserController extends Controller
             abort(403, 'Unauthorized');
         }
         $allRoles = Role::pluck('name', 'name')->all();
-        return view('users.create', compact('allRoles'));
+        return view('admin.users.create', compact('allRoles'));
     }
 
     public function create_user()
     {
         $allRoles = Role::pluck('name', 'name')->all();
-        return view('users.create', compact('allRoles'));
+        return view('admin.users.create', compact('allRoles'));
     }
 
 
@@ -71,14 +73,14 @@ class UserController extends Controller
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
 
-        return redirect()->route('users.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully');
     }
 
     public function show($id)
     {
         $user = User::find($id);
-        return view('users.show', compact('user'));
+        return view('admin.users.show', compact('user'));
     }
 
     public function edit($id)
@@ -90,7 +92,7 @@ class UserController extends Controller
         $allRoles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
 
-        return view('users.edit', compact('user', 'allRoles', 'userRole'));
+        return view('admin.users.edit', compact('user', 'allRoles', 'userRole'));
     }
 
     public function update(Request $request, $id)
@@ -121,7 +123,7 @@ class UserController extends Controller
             $user->syncRoles([]); // Remove all roles if none are selected
         }
 
-        return redirect()->route('users.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully');
     }
 
@@ -131,6 +133,6 @@ class UserController extends Controller
             abort(403, 'Unauthorized');
         }
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully');
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
     }
 }

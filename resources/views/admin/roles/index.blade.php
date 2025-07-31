@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     <h1 class="mb-1">🛢️ قائمة الصلاحيات</h1>
@@ -24,10 +24,10 @@
                     </td>
                     <td>
                         <div>
-                            <a href="{{ route('roles.edit', ['role' => $role->id]) }}" class="btn btn-primary">
+                            <a href="{{ route('admin.roles.edit', ['role' => $role->id]) }}" class="btn btn-primary">
                                 تعديل
                             </a>
-                            <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
+                            <form method="POST" action="{{ route('admin.roles.destroy', $role->id) }}"
                                 onsubmit="return confirm('Are you sure you want to delete this role?');">
                                 @csrf
                                 @method('DELETE')
