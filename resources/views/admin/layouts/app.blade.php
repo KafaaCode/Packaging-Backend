@@ -165,6 +165,9 @@
                             class="fa-solid fa-circle-minus"></i><span
                             class="menu-title text-truncate">الأذونات</span></a>
                 </li>
+                <li class="nav-item"><a class="d-flex align-items-center" href="{{ route('admin.orders.index') }}"><i
+                            class="fa-solid fa-bag-shopping"></i><span class="menu-title text-truncate">الطلبات</span></a>
+                </li>
                
                 <li class="nav-item"><a class="d-flex align-items-center" href="/logout"><i
                             class="fa-solid fa-right-from-bracket"></i><span class="menu-title text-truncate">تسجيل الخروج</span></a>

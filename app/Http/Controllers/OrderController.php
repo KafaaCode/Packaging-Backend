@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function indexFront()
+    {
+        $orders = Order::where('user_id', auth()->id())->with('orderDetails.product')->orderBy('created_at', 'desc')->get();
+        return view('front.orders.index', compact('orders'));
+    }
+
+    public function index()
     {
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 10);

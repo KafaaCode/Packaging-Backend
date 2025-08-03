@@ -79,6 +79,17 @@
             <li class="nav-item">
               <a class="btn btn-primary btn-transition" href="#category">تسوق الآن</a>
             </li>
+            <!-- زر سلة التسوق -->
+            <li class="nav-item">
+              <a class="btn btn-outline-primary position-relative" href="{{ route('cart.index') }}">
+                <i class="bi bi-cart"></i> سلة التسوق
+                @if(session('cart') && count(session('cart')) > 0)
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ count(session('cart')) }}
+                  </span>
+                @endif
+              </a>
+            </li>
             <!-- login or dashboard -->
             @if (Auth::check())
               @if (Auth::user()->is_admin)
@@ -87,7 +98,7 @@
                 </li>
                 @else
                 <li class="nav-item">
-                  <a class="btn btn-primary btn-transition" href="{{ route('dashboard') }}">طلباتي</a>
+                  <a class="btn btn-primary btn-transition" href="{{ route('orders.index') }}">طلباتي</a>
                 </li>
               @endif
             @else

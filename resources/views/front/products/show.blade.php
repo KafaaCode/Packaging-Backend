@@ -51,7 +51,7 @@
 
                     <!-- Actions -->
                     <div class="d-flex flex-wrap gap-3 mt-4">
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('cart.add', $product->id) }}">
                             @csrf
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-shopping-cart me-1"></i> أضف إلى السلة
